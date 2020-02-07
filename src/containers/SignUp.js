@@ -1,8 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
@@ -62,30 +59,30 @@ class SignUp extends React.Component {
     const { showMessage, loader, alertMessage } = this.props;
     return (
       <div className="body" style={{ margin: "140px auto" }}>
-        <div className="container right-panel-active" id="container" >
-          <div className="form-container sign-up-container">
-            <form action="#">
-              <h1>Create Account</h1>
-              <div className="social-container">
+        <div className="container a right-panel-active" id="container" >
+          <div className="form-container a sign-up-container">
+            <form className="a" action="#">
+              <h1 className="a">Create Account</h1>
+              <div className="social-container a">
                 {/* <a href="#" className="social"><i className="fab fa-facebook-f" /></a> */}
-                <a href="#" onClick={() => {
+                <a className="a" href="#" onClick={() => {
                   this.props.showAuthLoader();
                   this.props.userGoogleSignIn();
 
                 }} className="social"><i className="fab fa-google-plus-g" /></a>
                 {/* <a href="#" className="social"><i className="fab fa-linkedin-in" /></a> */}
               </div>
-              <span>or use your email for registration</span>
-              <input label="Name"
+              <span className="a">or use your email for registration</span>
+              <input className="a" label="Name"
                 onChange={(event) => this.setState({ name: event.target.value })}
                 defaultValue={name} type="text" placeholder="Name" />
-              <input onChange={(event) => this.setState({ email: event.target.value })}
+              <input className="a" onChange={(event) => this.setState({ email: event.target.value })}
                 label={<IntlMessages id="appModule.email" />}
                 defaultValue={email} type="email" placeholder="Email" />
-              <input onChange={(event) => this.setState({ password: event.target.value })}
+              <input className="a" onChange={(event) => this.setState({ password: event.target.value })}
                 label={<IntlMessages id="appModule.password" />}
                 defaultValue={password} type="password" placeholder="Password" />
-              <button onClick={() => {
+              <button className="a" onClick={() => {
                 this.props.showAuthLoader();
                 this.props.userSignUp({ email, password });
               }}>Sign Up</button>
@@ -93,22 +90,22 @@ class SignUp extends React.Component {
           </div>
 
 
-          <div className="overlay-container">
-            <div className="overlay">
-              <div className="overlay-panel overlay-left">
+          <div className="overlay-container a">
+            <div className="overlay a">
+              <div className="overlay-panel a overlay-left">
                 <Link className="logo-lg" to="/" title="Jambo">
                   <img src={require("assets/images/logo.png")} alt="jambo" title="jambo" />                </Link>
                 <p>To keep connected with us please login with your personal info</p>
                 <Link to="/signin">
-                  <button className="ghost" id="signIn">Sign In</button>
+                  <button className="ghost a" id="signIn">Sign In</button>
                 </Link>
               </div>
-              <div className="overlay-panel overlay-right">
+              <div className="overlay-panel a overlay-right">
                 <Link className="logo-lg" to="/" title="Jambo">
                   <img src={require("assets/images/logo.png")} alt="jambo" title="jambo" />                </Link>d
                 <p>Enter your personal details and start journey with us</p>
                 <Link to="/signup">
-                  <button className="ghost" id="signUp">Sign Up</button>
+                  <button className="ghost a" id="signUp">Sign Up</button>
                 </Link>
               </div>
             </div>

@@ -1,9 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
-import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import IntlMessages from 'util/IntlMessages';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -60,48 +57,48 @@ class SignIn extends React.Component {
     const { showMessage, loader, alertMessage } = this.props;
     return (
       <div className="body" style={{ margin: "140px auto" }}>
-        <div className="container" id="container">
+        <div className="container a" id="container">
 
-          <div className="form-container sign-in-container">
-            <form action="#">
-              <h1>Sign in</h1>
-              <div className="social-container">
+          <div className="form-container a sign-in-container">
+            <form className="a" action="#">
+              <h1 className="a">Sign in</h1>
+              <div className="social-container a">
                 {/* <a href="#" className="social"><i className="fab fa-facebook-f" /></a> */}
-                <a href="#" className="social" onClick={() => {
+                <a href="#" className="social a" onClick={() => {
                   this.props.showAuthLoader();
                   this.props.userGoogleSignIn();
                 }}><i className="fab fa-google-plus-g" /></a>
                 {/* <a href="#" className="social"><i className="fab fa-linkedin-in" /></a> */}
               </div>
-              <span>or use your account</span>
+              <span className="a">or use your account</span>
 
-              <input label={<IntlMessages id="appModule.email" />} onChange={(event) => this.setState({ password: event.target.value })} defaultValue={email} type="email" placeholder="Email" />
-              <input label={<IntlMessages id="appModule.password" />} onChange={(event) => this.setState({ password: event.target.value })} defaultValue={password} type="password" placeholder="Password" />
-              <a href="#">Forgot your password?</a>
-              <button onClick={() => {
+              <input className="a" label={<IntlMessages id="appModule.email" />} onChange={(event) => this.setState({ password: event.target.value })} defaultValue={email} type="email" placeholder="Email" />
+              <input className="a" label={<IntlMessages id="appModule.password" />} onChange={(event) => this.setState({ password: event.target.value })} defaultValue={password} type="password" placeholder="Password" />
+              <a className="a" href="#">Forgot your password?</a>
+              <button className="a" onClick={() => {
                 this.props.showAuthLoader();
                 this.props.userSignIn({ email, password });
               }}>
                 Sign In</button>
             </form>
           </div>
-          <div className="overlay-container">
-            <div className="overlay">
-              <div className="overlay-panel overlay-left">
+          <div className="overlay-container a">
+            <div className="overlay a">
+              <div className="overlay-panel a overlay-left">
                 <Link className="logo-lg" to="/" title="Jambo">
                   <img src={require("assets/images/logo.png")} alt="jambo" title="jambo" />
                 </Link>
                 <p>To keep connected with us please login with your personal info</p>
                 <Link to="/signin">
-                  <button className="ghost" id="signIn">Sign In</button>
+                  <button className="ghost a" id="signIn">Sign In</button>
                 </Link>
               </div>
-              <div className="overlay-panel overlay-right">
+              <div className="overlay-panel a overlay-right">
                 <Link className="logo-lg" to="/" title="Jambo">
                   <img src={require("assets/images/logo.png")} alt="jambo" title="jambo" />                </Link>
                 <p>Enter your personal details and start journey with us</p>
                 <Link to="/signup">
-                  <button className="ghost" id="signUp">Sign Up</button>
+                  <button className="ghost a" id="signUp">Sign Up</button>
                 </Link>
               </div>
             </div>
