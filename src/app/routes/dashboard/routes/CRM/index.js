@@ -16,6 +16,7 @@ import {detailCards, recentActivity} from "./data";
 import CurrencyCalculator from "../Crypto/CurrencyCalculator";
 import ContainerHeader from "components/ContainerHeader/index";
 import IntlMessages from "util/IntlMessages";
+import Cards from './Cards';
 
 const CRM = ({match}) => {
   return (
@@ -29,6 +30,7 @@ const CRM = ({match}) => {
             <div className="row">
               <div className="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
                 <WelComeCard/>
+                <Cards/>
               </div>
 
               <div className="jr-audi-col col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
