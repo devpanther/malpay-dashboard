@@ -5,6 +5,7 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 import IntlMessages from 'util/IntlMessages';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import './SignIn.css';
+import Logo from './img/App-Logo-Transparent-white.png';
 import {
   hideMessage,
   showAuthLoader,
@@ -25,17 +26,59 @@ class SignIn extends React.Component {
   }
 
   componentDidMount() {
-    const signUpButton = document.getElementById('signUp');
-    const signInButton = document.getElementById('signIn');
-    const container = document.getElementById('container');
+    function animatedForm() {
+      const arrows = document.querySelectorAll(".fa-arrow-down");
 
-    signUpButton.addEventListener('click', () => {
-      container.classList.add("right-panel-active");
-    });
+      arrows.forEach(arrow => {
+        arrow.addEventListener("click", () => {
+          const input = arrow.previousElementSibling;
+          const parent = arrow.parentElement;
+          const nextForm = parent.nextElementSibling;
 
-    signInButton.addEventListener('click', () => {
-      container.classList.remove("right-panel-active");
-    });
+          //Check for validation
+          if (input.type === "text" && validateUser(input)) {
+            nextSlide(parent, nextForm);
+          } else if (input.type === "email" && validateEmail(input)) {
+            nextSlide(parent, nextForm);
+          } else if (input.type === "password" && validateUser(input)) {
+            // nextSlide(parent, nextForm);
+          } else {
+            parent.style.animation = "shake 0.5s ease";
+          }
+          //get rid of animation
+          parent.addEventListener("animationend", () => {
+            parent.style.animation = "";
+          })
+        })
+      })
+    }
+
+    function validateUser(user) {
+      if (user.value.length < 6) {
+        console.log("not enough characters");
+      } else {
+        return true;
+      }
+    }
+
+    function validateEmail(email) {
+      const validation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (validation.test(email.value)) {
+        error("rgb(87, 189, 130)");
+        return true;
+      }
+    }
+
+    function nextSlide(parent, nextForm) {
+      parent.classList.add("innactive");
+      parent.classList.remove("active");
+      nextForm.classList.add("active");
+    }
+
+    function error(color) {
+      document.body.style.backgroundColor = color;
+    }
+    animatedForm();
   }
 
   componentDidUpdate() {
@@ -56,54 +99,29 @@ class SignIn extends React.Component {
     } = this.state;
     const { showMessage, loader, alertMessage } = this.props;
     return (
-      <div className="body" style={{ margin: "140px auto" }}>
-        <div className="container a" id="container">
-
-          <div className="form-container a sign-in-container">
-            <form className="a" action="#">
-              <h1 className="a">Sign in</h1>
-              <div className="social-container a">
-                {/* <a href="#" className="social"><i className="fab fa-facebook-f" /></a> */}
-                <a href="#" className="social a" onClick={() => {
-                  this.props.showAuthLoader();
-                  this.props.userGoogleSignIn();
-                }}><i className="fab fa-google-plus-g" /></a>
-                {/* <a href="#" className="social"><i className="fab fa-linkedin-in" /></a> */}
-              </div>
-              <span className="a">or use your account</span>
-
-              <input className="a" label={<IntlMessages id="appModule.email" />} onChange={(event) => this.setState({ password: event.target.value })} defaultValue={email} type="email" placeholder="Email" />
-              <input className="a" label={<IntlMessages id="appModule.password" />} onChange={(event) => this.setState({ password: event.target.value })} defaultValue={password} type="password" placeholder="Password" />
-              <a className="a" href="#">Forgot your password?</a>
-              <button className="a" onClick={() => {
+      <div>
+        <div className="logo">
+          <a href="#"><img src={Logo} alt="" /></a>
+        </div>
+        <form>
+          <div className="field-email active">
+            <i className="fas fa-envelope" />
+            <input type="email" onChange={(event) => this.setState({ email: event.target.value })}
+              defaultValue={email} required />
+            <i className="fas fa-arrow-down" />
+          </div>
+          <div className="field-password innactive">
+            <i className="fas fa-key" />
+            <input type="password" onChange={(event) => this.setState({ password: event.target.value })}
+              defaultValue={password} required />
+            <i className="fas fa-arrow-down"
+              onClick={() => {
                 this.props.showAuthLoader();
                 this.props.userSignIn({ email, password });
-              }}>
-                Sign In</button>
-            </form>
+              }}
+            />
           </div>
-          <div className="overlay-container a">
-            <div className="overlay a">
-              <div className="overlay-panel a overlay-left">
-                <Link className="logo-lg" to="/" title="Jambo">
-                  <img src={require("assets/images/logo.png")} alt="jambo" title="jambo" />
-                </Link>
-                <p>To keep connected with us please login with your personal info</p>
-                <Link to="/signin">
-                  <button className="ghost a" id="signIn">Sign In</button>
-                </Link>
-              </div>
-              <div className="overlay-panel a overlay-right">
-                <Link className="logo-lg" to="/" title="Jambo">
-                  <img src={require("assets/images/logo.png")} alt="jambo" title="jambo" />                </Link>
-                <p>Enter your personal details and start journey with us</p>
-                <Link to="/signup">
-                  <button className="ghost a" id="signUp">Sign Up</button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
+        </form>
         {
           loader &&
           <div className="loader-view">

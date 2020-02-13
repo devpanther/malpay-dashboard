@@ -5,6 +5,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
 import './SignIn.css';
 import IntlMessages from 'util/IntlMessages';
+import Logo from './img/App-Logo-Transparent-white.png';
+
 import {
   hideMessage,
   showAuthLoader,
@@ -21,22 +23,66 @@ class SignUp extends React.Component {
     this.state = {
       name: '',
       email: '',
-      password: ''
+      firstpassword: '',
+      password: '',
+      phone: ''
     }
   }
 
   componentDidMount() {
-    const signUpButton = document.getElementById('signUp');
-    const signInButton = document.getElementById('signIn');
-    const container = document.getElementById('container');
+    function animatedForm() {
+      const arrows = document.querySelectorAll(".fa-arrow-down");
 
-    signUpButton.addEventListener('click', () => {
-      container.classList.add("right-panel-active");
-    });
+      arrows.forEach(arrow => {
+        arrow.addEventListener("click", () => {
+          const input = arrow.previousElementSibling;
+          const parent = arrow.parentElement;
+          const nextForm = parent.nextElementSibling;
 
-    signInButton.addEventListener('click', () => {
-      container.classList.remove("right-panel-active");
-    });
+          //Check for validation
+          if (input.type === "text" && validateUser(input)) {
+            nextSlide(parent, nextForm);
+          } else if (input.type === "email" && validateEmail(input)) {
+            nextSlide(parent, nextForm);
+          } else if (input.type === "password" && validateUser(input)) {
+            nextSlide(parent, nextForm);
+          } else {
+            parent.style.animation = "shake 0.5s ease";
+          }
+          //get rid of animation
+          parent.addEventListener("animationend", () => {
+            parent.style.animation = "";
+          })
+        })
+      })
+    }
+
+    function validateUser(user) {
+      if (user.value.length < 6) {
+        console.log("not enough characters");
+      } else {
+        return true;
+      }
+    }
+
+    function validateEmail(email) {
+      const validation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (validation.test(email.value)) {
+        error("rgb(87, 189, 130)");
+        return true;
+      }
+    }
+
+    function nextSlide(parent, nextForm) {
+      parent.classList.add("innactive");
+      parent.classList.remove("active");
+      nextForm.classList.add("active");
+    }
+
+    function error(color) {
+      document.body.style.backgroundColor = color;
+    }
+    animatedForm();
   }
 
   componentDidUpdate() {
@@ -54,64 +100,57 @@ class SignUp extends React.Component {
     const {
       name,
       email,
-      password
+      password,
+      firstpassword,
+      phone
     } = this.state;
     const { showMessage, loader, alertMessage } = this.props;
     return (
-      <div className="body" style={{ margin: "140px auto" }}>
-        <div className="container a right-panel-active" id="container" >
-          <div className="form-container a sign-up-container">
-            <form className="a" action="#">
-              <h1 className="a">Create Account</h1>
-              <div className="social-container a">
-                {/* <a href="#" className="social"><i className="fab fa-facebook-f" /></a> */}
-                <a className="a" href="#" onClick={() => {
-                  this.props.showAuthLoader();
-                  this.props.userGoogleSignIn();
-
-                }} className="social"><i className="fab fa-google-plus-g" /></a>
-                {/* <a href="#" className="social"><i className="fab fa-linkedin-in" /></a> */}
-              </div>
-              <span className="a">or use your email for registration</span>
-              <input className="a" label="Name"
-                onChange={(event) => this.setState({ name: event.target.value })}
-                defaultValue={name} type="text" placeholder="Name" />
-              <input className="a" onChange={(event) => this.setState({ email: event.target.value })}
-                label={<IntlMessages id="appModule.email" />}
-                defaultValue={email} type="email" placeholder="Email" />
-              <input className="a" onChange={(event) => this.setState({ password: event.target.value })}
-                label={<IntlMessages id="appModule.password" />}
-                defaultValue={password} type="password" placeholder="Password" />
-              <button className="a" onClick={() => {
-                this.props.showAuthLoader();
-                this.props.userSignUp({ email, password });
-              }}>Sign Up</button>
-            </form>
-          </div>
-
-
-          <div className="overlay-container a">
-            <div className="overlay a">
-              <div className="overlay-panel a overlay-left">
-                <Link className="logo-lg" to="/" title="Jambo">
-                  <img src={require("assets/images/logo.png")} alt="jambo" title="jambo" />                </Link>
-                <p>To keep connected with us please login with your personal info</p>
-                <Link to="/signin">
-                  <button className="ghost a" id="signIn">Sign In</button>
-                </Link>
-              </div>
-              <div className="overlay-panel a overlay-right">
-                <Link className="logo-lg" to="/" title="Jambo">
-                  <img src={require("assets/images/logo.png")} alt="jambo" title="jambo" />                </Link>d
-                <p>Enter your personal details and start journey with us</p>
-                <Link to="/signup">
-                  <button className="ghost a" id="signUp">Sign Up</button>
-                </Link>
-              </div>
-            </div>
-          </div>
+      <div>
+        <div className="logo">
+          <a href="#"><img src={Logo} alt="" /></a>
         </div>
-
+        <form>
+          <div className="field-name">
+            <i className="fas fa-user" />
+            <input type="text" onChange={(event) => this.setState({ name: event.target.value })}
+              defaultValue={name} required placeholder="Name" />
+            <i className="fas fa-arrow-down" />
+          </div>
+          <div className="field-email innactive">
+            <i className="fas fa-envelope" />
+            <input type="text" onChange={(event) => this.setState({ phone: event.target.value })}
+              label={<IntlMessages id="appModule.phone" />}
+              defaultValue={phone} required placeholder="Phone Number" />
+            <i className="fas fa-arrow-down" />
+          </div>
+          <div className="field-email innactive">
+            <i className="fas fa-envelope" />
+            <input type="email" onChange={(event) => this.setState({ email: event.target.value })}
+              label={<IntlMessages id="appModule.email" />}
+              defaultValue={email} required placeholder="Email Address" />
+            <i className="fas fa-arrow-down" />
+          </div>
+          <div className="field-password innactive">
+            <i className="fas fa-key" />
+            <input type="password" onChange={(event) => this.setState({ firstpassword: event.target.value })}
+              label={<IntlMessages id="appModule.password" />}
+              defaultValue={firstpassword} required placeholder="Password" id="txtPassword" />
+            <i className="fas fa-arrow-down" />
+          </div>
+          <div className="field-password innactive">
+            <i className="fas fa-key" />
+            <input type="password" placeholder="Confirm Password" onChange={(event) => this.setState({ password: event.target.value })}
+              label={<IntlMessages id="appModule.password" />}
+              defaultValue={password} required id="txtComfirmPassword" />
+            <i className="fas fa-arrow-down" />
+          </div>
+          <div className="field-finish innactive">
+            <i className="fas fa-heart" />
+            <p>Thank you. Check your email for confirmation.</p>
+            <i className="fas fa-heart" />
+          </div>
+        </form>
         {
           loader &&
           <div className="loader-view">
