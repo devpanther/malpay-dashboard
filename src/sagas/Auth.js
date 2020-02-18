@@ -1,10 +1,12 @@
-import {all, call, fork, put, takeEvery} from "redux-saga/effects";
+import { all, call, fork, put, takeEvery } from "redux-saga/effects";
+import swal from 'sweetalert';
+
 import {
   auth,
   facebookAuthProvider,
   githubAuthProvider,
   googleAuthProvider,
-  twitterAuthProvider
+  twitterAuthProvider,
 } from "../firebase/firebase";
 import {
   SIGNIN_FACEBOOK_USER,
@@ -15,7 +17,7 @@ import {
   SIGNOUT_USER,
   SIGNUP_USER
 } from "constants/ActionTypes";
-import {showAuthMessage, userSignInSuccess, userSignOutSuccess, userSignUpSuccess} from "actions/Auth";
+import { showAuthMessage, userSignInSuccess, userSignOutSuccess, userSignUpSuccess } from "actions/Auth";
 import {
   userFacebookSignInSuccess,
   userGithubSignInSuccess,
@@ -23,51 +25,81 @@ import {
   userTwitterSignInSuccess
 } from "../actions/Auth";
 
+let isEmailVerified = false;
+
+function sendVerify() {
+  const user = auth.currentUser;
+  user.sendEmailVerification().then(function () {
+    swal({
+      title: "Verification Email Sent!",
+      text: "Please, Check Your Email for Confirmation",
+      icon: "success",
+      dangerMode: true,
+    });
+  }).catch(function (error) {
+    swal({
+      title: "An error Occured!",
+      icon: "danger",
+      dangerMode: true,
+    });
+  });
+}
+
 const createUserWithEmailPasswordRequest = async (email, password) =>
-  await  auth.createUserWithEmailAndPassword(email, password)
+  await auth.createUserWithEmailAndPassword(email, password)
     .then(authUser => authUser)
     .catch(error => error);
 
 const signInUserWithEmailPasswordRequest = async (email, password) =>
-  await  auth.signInWithEmailAndPassword(email, password)
+  await auth.signInWithEmailAndPassword(email, password)
     .then(authUser => authUser)
-    .catch(error => error);
+    .catch(error => error
+    );
 
 const signOutRequest = async () =>
-  await  auth.signOut()
+  await auth.signOut()
     .then(authUser => authUser)
     .catch(error => error);
 
 
 const signInUserWithGoogleRequest = async () =>
-  await  auth.signInWithPopup(googleAuthProvider)
+  await auth.signInWithPopup(googleAuthProvider)
     .then(authUser => authUser)
     .catch(error => error);
 
 const signInUserWithFacebookRequest = async () =>
-  await  auth.signInWithPopup(facebookAuthProvider)
+  await auth.signInWithPopup(facebookAuthProvider)
     .then(authUser => authUser)
     .catch(error => error);
 
 const signInUserWithGithubRequest = async () =>
-  await  auth.signInWithPopup(githubAuthProvider)
+  await auth.signInWithPopup(githubAuthProvider)
     .then(authUser => authUser)
     .catch(error => error);
 
 const signInUserWithTwitterRequest = async () =>
-  await  auth.signInWithPopup(twitterAuthProvider)
+  await auth.signInWithPopup(twitterAuthProvider)
     .then(authUser => authUser)
     .catch(error => error);
 
-function* createUserWithEmailPassword({payload}) {
-  const {email, password} = payload;
+function* createUserWithEmailPassword({ payload }) {
+  const { email, password } = payload;
+  const user = auth.currentUser;
   try {
     const signUpUser = yield call(createUserWithEmailPasswordRequest, email, password);
     if (signUpUser.message) {
       yield put(showAuthMessage(signUpUser.message));
     } else {
-      localStorage.setItem('user_id', signUpUser.user.uid);
-      yield put(userSignUpSuccess(signUpUser.user.uid));
+      sendVerify();
+      if (user) {
+        if (user.emailVerified === true) {
+          localStorage.setItem('user_id', signUpUser.user.uid);
+          yield put(userSignUpSuccess(signUpUser.user.uid));
+        } else {
+
+        }
+      }
+
     }
   } catch (error) {
     yield put(showAuthMessage(error));
@@ -137,12 +169,52 @@ function* signInUserWithTwitter() {
   }
 }
 
-function* signInUserWithEmailPassword({payload}) {
-  const {email, password} = payload;
+function* signInUserWithEmailPassword({ payload }) {
+  const { email, password } = payload;
   try {
     const signInUser = yield call(signInUserWithEmailPasswordRequest, email, password);
-    if (signInUser.message) {
+    const user = auth.currentUser;
+
+    if (signInUser.message && !user.emailVerified) {
       yield put(showAuthMessage(signInUser.message));
+      auth.onAuthStateChanged(function (user) {
+        if (user) {
+          if (user.emailVerified === false) {
+
+          } else {
+            isEmailVerified = true;
+          }
+        } else {
+          swal({
+            title: "Email Address is not Verified!",
+            text: "Please, Check Your Email for Confirmation",
+            icon: "warning",
+            dangerMode: true,
+          });
+        }
+      });
+    } else if (!user.emailVerified) {
+
+      auth.onAuthStateChanged(function (user) {
+        if (user) {
+          if (user.emailVerified === false) {
+            swal({
+              title: "Email Address is not Verified!",
+              text: "Please, Check Your Email for Confirmation",
+              icon: "warning",
+              dangerMode: true,
+            });
+          } else {
+            isEmailVerified = true;
+          }
+        } else {
+          swal({
+            title: "Logged Out!",
+            icon: "success",
+            dangerMode: true,
+          });
+        }
+      });
     } else {
       localStorage.setItem('user_id', signInUser.user.uid);
       yield put(userSignInSuccess(signInUser.user.uid));
@@ -196,10 +268,10 @@ export function* signOutUser() {
 
 export default function* rootSaga() {
   yield all([fork(signInUser),
-    fork(createUserAccount),
-    fork(signInWithGoogle),
-    fork(signInWithFacebook),
-    fork(signInWithTwitter),
-    fork(signInWithGithub),
-    fork(signOutUser)]);
+  fork(createUserAccount),
+  fork(signInWithGoogle),
+  fork(signInWithFacebook),
+  fork(signInWithTwitter),
+  fork(signInWithGithub),
+  fork(signOutUser)]);
 }
