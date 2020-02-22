@@ -12,74 +12,73 @@ import NewCustomers from "./NewCustomers";
 import GrowthCard from "./GrowthCard";
 import IconWithTextCard from "./IconWithTextCard";
 import Widget from "components/Widget/index";
-import {detailCards, recentActivity} from "./data";
+import { detailCards, recentActivity } from "./data";
 import CurrencyCalculator from "../Crypto/CurrencyCalculator";
 import ContainerHeader from "components/ContainerHeader/index";
 import IntlMessages from "util/IntlMessages";
 import Cards from './Cards';
 import Popup from './Popup';
 
-const CRM = ({match}) => {
+const CRM = ({ match }) => {
   return (
 
     <div className="dashboard animated slideInUpTiny animation-duration-3">
-
-      <ContainerHeader match={match} title={<IntlMessages id="User Dashboard"/>}/>
+      <ContainerHeader match={match} title={<IntlMessages id="User Dashboard" />} />
       <div className="row">
         <div className="col-xl-12 col-lg-12 col-md-12 col-12">
           <Widget styleName="p-4">
             <div className="row">
               <div className="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
-                <WelComeCard/>
-                
+                <WelComeCard />
+
               </div>
 
               <div className="jr-audi-col col-xl-3 col-lg-3 col-md-6 col-sm-6 col-12">
-                <SiteAudience/>
+                <SiteAudience />
               </div>
 
               <div className="jr-visit-col col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                <SiteVisit/>
-              </div>   
-                <Cards/>
-                <Popup/>
+                <SiteVisit />
+              </div>
+              <Cards />
+              <Popup />
             </div>
           </Widget>
         </div>
         <div className="col-xl-4 col-lg-4 col-md-6 col-12">
-          <TotalRevenueCard/>
+          <TotalRevenueCard />
         </div>
         <div className="col-xl-4 col-lg-4 col-md-6 col-12">
-          <NewCustomers/>
+          <NewCustomers />
         </div>
         <div className="col-xl-4 col-lg-4 col-md-12 col-12">
-          <GrowthCard/>
+          <GrowthCard />
         </div>
         <div className="col-xl-4 col-lg-4 col-md-12 col-12 order-sm-2">
           <Widget>
-            <RecentActivity recentList={recentActivity} shape="rounded"/>
+            <RecentActivity recentList={recentActivity} shape="rounded" />
           </Widget>
-          <CurrencyCalculator/>
+          <CurrencyCalculator />
         </div>
 
         <div className="col-xl-8 col-lg-8 col-md-12 col-12 order-sm-1">
           <div className="row">
             {detailCards.map((data, index) => <div key={index} className="col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6">
-              <IconWithTextCard data={data}/>
+              <IconWithTextCard data={data} />
             </div>)
             }
 
             <div className="col-xl-12 col-lg-12 col-md-12 col-12">
-              <TaskList/>
+              <TaskList />
             </div>
             <div className="col-xl-7 col-lg-7 col-md-7 col-12">
-              <TicketList/>
+              <TicketList />
             </div>
             <div className="col-xl-5 col-lg-5 col-md-5 col-12">
-              <TaskByStatus/>
+              <TaskByStatus />
             </div>
             <div className="col-xl-12 col-lg-12 col-md-12 col-12">
-              <Overview/>
+              <Overview />
             </div>
           </div>
         </div>

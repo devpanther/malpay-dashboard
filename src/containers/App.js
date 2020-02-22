@@ -62,6 +62,7 @@ const RestrictedRoute = ({ component: Component, authUser, ...rest }) =>
 class App extends Component {
 
   componentWillMount() {
+
     window.__MUI_USE_NEXT_TYPOGRAPHY_VARIANTS__ = true;
     if (this.props.initURL === '') {
       this.props.setInitUrl(this.props.history.location.pathname);

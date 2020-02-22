@@ -4,6 +4,11 @@
 	box-sizing: border-box;
 }
 
+.app-logo-content {
+	background: -webkit-linear-gradient(to right, #56ccf2, #2f80ed);
+	background: linear-gradient(to right, #56ccf2, #2f80ed);
+}
+
 /* body {
 	background: #f6f5f7;
 	display: flex;

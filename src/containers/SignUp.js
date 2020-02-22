@@ -1,5 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import TextField from '@material-ui/core/TextField';
+import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
@@ -21,22 +24,24 @@ class SignUp extends React.Component {
     this.state = {
       name: '',
       email: '',
-      password: ''
+      password: '',
+      password2: '',
+      phone: ''
     }
   }
 
   componentDidMount() {
-    const signUpButton = document.getElementById('signUp');
-    const signInButton = document.getElementById('signIn');
-    const container = document.getElementById('container');
+    // const signUpButton = document.getElementById('signUp');
+    // const signInButton = document.getElementById('signIn');
+    // const container = document.getElementById('container');
 
-    signUpButton.addEventListener('click', () => {
-      container.classList.add("right-panel-active");
-    });
+    // signUpButton.addEventListener('click', () => {
+    //   container.classList.add("right-panel-active");
+    // });
 
-    signInButton.addEventListener('click', () => {
-      container.classList.remove("right-panel-active");
-    });
+    // signInButton.addEventListener('click', () => {
+    //   container.classList.remove("right-panel-active");
+    // });
   }
 
   componentDidUpdate() {
@@ -54,62 +59,147 @@ class SignUp extends React.Component {
     const {
       name,
       email,
-      password
+      password,
+      password2,
+      phone
     } = this.state;
     const { showMessage, loader, alertMessage } = this.props;
     return (
-      <div className="body" style={{ margin: "140px auto" }}>
-        <div className="container a right-panel-active" id="container" >
-          <div className="form-container a sign-up-container">
-            <form className="a" action="#">
-              <h1 className="a">Create Account</h1>
-              <div className="social-container a">
-                {/* <a href="#" className="social"><i className="fab fa-facebook-f" /></a> */}
-                <a className="a" href="#" onClick={() => {
-                  this.props.showAuthLoader();
-                  this.props.userGoogleSignIn();
-
-                }} className="social"><i className="fab fa-google-plus-g" /></a>
-                {/* <a href="#" className="social"><i className="fab fa-linkedin-in" /></a> */}
-              </div>
-              <span className="a">or use your email for registration</span>
-              <input className="a" label="Name"
-                onChange={(event) => this.setState({ name: event.target.value })}
-                defaultValue={name} type="text" placeholder="Name" />
-              <input className="a" onChange={(event) => this.setState({ email: event.target.value })}
-                label={<IntlMessages id="appModule.email" />}
-                defaultValue={email} type="email" placeholder="Email" />
-              <input className="a" onChange={(event) => this.setState({ password: event.target.value })}
-                label={<IntlMessages id="appModule.password" />}
-                defaultValue={password} type="password" placeholder="Password" />
-              <button className="a" onClick={() => {
-                this.props.showAuthLoader();
-                this.props.userSignUp({ email, password });
-              }}>Sign Up</button>
-            </form>
+      <div
+        className="app-login-container d-flex justify-content-center align-items-center animated slideInUpTiny animation-duration-3">
+        <div className="app-login-main-content">
+          <div className="app-logo-content d-flex align-items-center justify-content-center">
+            <Link className="logo-lg" to="/" title="Jambo">
+              <img src={require("assets/images/logo.png")} alt="jambo" title="jambo" />
+            </Link>
           </div>
 
+          <div className="app-login-content">
+            <div className="app-login-header">
+              <h1>Sign Up</h1>
+            </div>
 
-          <div className="overlay-container a">
-            <div className="overlay a">
-              <div className="overlay-panel a overlay-left">
-                <Link className="logo-lg" to="/" title="Jambo">
-                  <img src={require("assets/images/logo.png")} alt="jambo" title="jambo" />                </Link>
-                <p>To keep connected with us please login with your personal info</p>
-                <Link to="/signin">
-                  <button className="ghost a" id="signIn">Sign In</button>
-                </Link>
-              </div>
-              <div className="overlay-panel a overlay-right">
-                <Link className="logo-lg" to="/" title="Jambo">
-                  <img src={require("assets/images/logo.png")} alt="jambo" title="jambo" />                </Link>d
-                <p>Enter your personal details and start journey with us</p>
-                <Link to="/signup">
-                  <button className="ghost a" id="signUp">Sign Up</button>
-                </Link>
-              </div>
+            <div className="mb-4">
+              <h2><IntlMessages id="appModule.createAccount" /></h2>
+            </div>
+
+            <div className="app-login-form">
+              <form method="post" action="/">
+                <TextField
+                  type="text"
+                  label="Name"
+                  onChange={(event) => this.setState({ name: event.target.value })}
+                  fullWidth
+                  defaultValue={name}
+                  margin="normal"
+                  className="mt-0 mb-2"
+                />
+
+
+
+                <TextField
+                  type="tel"
+                  onChange={(event) => this.setState({ phone: event.target.value })}
+                  label="Phone Number"
+                  fullWidth
+                  defaultValue={phone}
+                  margin="normal"
+                  className="mt-0 mb-2"
+                />
+
+                <TextField
+                  type="email"
+                  onChange={(event) => this.setState({ email: event.target.value })}
+                  label={<IntlMessages id="appModule.email" />}
+                  fullWidth
+                  defaultValue={email}
+                  margin="normal"
+                  className="mt-0 mb-2"
+                />
+
+                <TextField
+                  type="password"
+                  onChange={(event) => this.setState({ password: event.target.value })}
+                  label={<IntlMessages id="appModule.password" />}
+                  fullWidth
+                  defaultValue={password}
+                  margin="normal"
+                  className="mt-0 mb-4"
+                />
+
+                <TextField
+                  type="password"
+                  onChange={(event) => this.setState({ password2: event.target.value })}
+                  label="Confirm Password"
+                  fullWidth
+                  defaultValue={password2}
+                  margin="normal"
+                  className="mt-0 mb-4"
+                />
+
+                <div className="mb-3 d-flex align-items-center justify-content-between">
+                  <Button variant="contained" onClick={() => {
+                    this.props.showAuthLoader();
+                    this.props.userSignUp({ name, phone, email, password });
+                  }} color="primary">
+                    <IntlMessages
+                      id="appModule.regsiter" />
+                  </Button>
+                  <Link to="/signin">
+                    <IntlMessages id="signUp.alreadyMember" />
+                  </Link>
+                </div>
+                <div className="app-social-block my-1 my-sm-3">
+                  <IntlMessages
+                    id="signIn.connectWith" />
+                  <ul className="social-link">
+                    {/* <li>
+                      <IconButton className="icon"
+                        onClick={() => {
+                          this.props.showAuthLoader();
+                          this.props.userFacebookSignIn();
+                        }}>
+                        <i className="zmdi zmdi-facebook" />
+                      </IconButton>
+                    </li> */}
+
+                    {/* <li>
+                      <IconButton className="icon"
+                        onClick={() => {
+                          this.props.showAuthLoader();
+                          this.props.userTwitterSignIn();
+                        }}>
+                        <i className="zmdi zmdi-twitter" />
+                      </IconButton>
+                    </li> */}
+
+                    <li>
+                      <IconButton className="icon"
+                        onClick={() => {
+                          this.props.showAuthLoader();
+                          this.props.userGoogleSignIn();
+
+                        }}>
+                        <i className="zmdi zmdi-google-plus" />
+                      </IconButton>
+                    </li>
+
+                    {/* <li>
+                      <IconButton className="icon"
+                        onClick={() => {
+                          this.props.showAuthLoader();
+                          this.props.userGithubSignIn();
+                        }}>
+                        <i className="zmdi zmdi-github" />
+                      </IconButton>
+                    </li> */}
+                  </ul>
+                </div>
+
+              </form>
             </div>
           </div>
+
         </div>
 
         {

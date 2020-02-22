@@ -1,6 +1,6 @@
 import { all, call, fork, put, takeEvery } from "redux-saga/effects";
 import swal from 'sweetalert';
-
+import rsf from '../firebase/firebase'
 import {
   auth,
   facebookAuthProvider,
@@ -29,16 +29,24 @@ let isEmailVerified = false;
 
 function sendVerify() {
   const user = auth.currentUser;
-  user.sendEmailVerification().then(function () {
+  user.sendEmailVerification({
+    url: "http://malpay-web.firebaseapp.com/signin"
+  }).then(function () {
     swal({
       title: "Verification Email Sent!",
       text: "Please, Check Your Email for Confirmation",
       icon: "success",
       dangerMode: true,
     });
+
+    setTimeout(function () {
+      const url = "http://malpay-web.firebaseapp.com/signin";
+      window.location.href = url
+    }, 1000);
+
   }).catch(function (error) {
     swal({
-      title: "An error Occured!",
+      title: error,
       icon: "danger",
       dangerMode: true,
     });
@@ -82,18 +90,20 @@ const signInUserWithTwitterRequest = async () =>
     .then(authUser => authUser)
     .catch(error => error);
 
+
 function* createUserWithEmailPassword({ payload }) {
-  const { email, password } = payload;
+  const { phone, name, email, password } = payload;
   const user = auth.currentUser;
   try {
     const signUpUser = yield call(createUserWithEmailPasswordRequest, email, password);
+    yield call(rsf.firestore.setDocument, `users/${signUpUser.user.uid}`, { email: email, name: name, phone: phone, isVerified: false });
     if (signUpUser.message) {
       yield put(showAuthMessage(signUpUser.message));
     } else {
       sendVerify();
       if (user) {
         if (user.emailVerified === true) {
-          localStorage.setItem('user_id', signUpUser.user.uid);
+          // localStorage.setItem('user_id', signUpUser.user.uid);
           yield put(userSignUpSuccess(signUpUser.user.uid));
         } else {
 
@@ -169,13 +179,18 @@ function* signInUserWithTwitter() {
   }
 }
 
+
 function* signInUserWithEmailPassword({ payload }) {
   const { email, password } = payload;
   try {
     const signInUser = yield call(signInUserWithEmailPasswordRequest, email, password);
     const user = auth.currentUser;
-
-    if (signInUser.message && !user.emailVerified) {
+    const snapshot = yield call(rsf.firestore.getCollection, 'users');
+    let userData;
+    snapshot.forEach(users => {
+      userData = users.data();
+    });
+    if (signInUser.message) {
       yield put(showAuthMessage(signInUser.message));
       auth.onAuthStateChanged(function (user) {
         if (user) {
@@ -185,16 +200,10 @@ function* signInUserWithEmailPassword({ payload }) {
             isEmailVerified = true;
           }
         } else {
-          swal({
-            title: "Email Address is not Verified!",
-            text: "Please, Check Your Email for Confirmation",
-            icon: "warning",
-            dangerMode: true,
-          });
+
         }
       });
     } else if (!user.emailVerified) {
-
       auth.onAuthStateChanged(function (user) {
         if (user) {
           if (user.emailVerified === false) {
@@ -204,6 +213,7 @@ function* signInUserWithEmailPassword({ payload }) {
               icon: "warning",
               dangerMode: true,
             });
+            window.location.reload();
           } else {
             isEmailVerified = true;
           }
@@ -215,9 +225,18 @@ function* signInUserWithEmailPassword({ payload }) {
           });
         }
       });
+    } else if (!user) {
+      swal({
+        title: "Logged Out!",
+        icon: "success",
+        dangerMode: true,
+      });
     } else {
+      yield call(rsf.firestore.updateDocument, `users/${signInUser.user.uid}`, 'isVerified', true);
+      yield put(userSignInSuccess(userData));
       localStorage.setItem('user_id', signInUser.user.uid);
       yield put(userSignInSuccess(signInUser.user.uid));
+      // console.log(userData);
     }
   } catch (error) {
     yield put(showAuthMessage(error));
