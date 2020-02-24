@@ -5,7 +5,7 @@ const WelComeCard = (props) => {
   console.log(props)
   return (
     <div className="jr-wel-ema pt-xl-2">
-      <h1 className="mb-3">Welcome {props.authUser}!</h1>
+      <h1 className="mb-3">Hello {props.userData.name} - Welcome to Malpay!</h1>
       <p className="jr-fs-sm text-uppercase">You Have</p>
       <ul className="list-unstyled">
         <li className="mb-1">
@@ -31,7 +31,7 @@ const WelComeCard = (props) => {
 
 const mapStateToProps = ({ settings, auth }) => {
   const { locale } = settings;
-  const { authUser, initURL } = auth;
-  return { authUser, initURL, locale }
+  const { authUser, initURL, profile, userData, cardData } = auth;
+  return { authUser, initURL, locale,userData, cardData }
 };
 export default connect(mapStateToProps)(WelComeCard);

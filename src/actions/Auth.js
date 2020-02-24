@@ -17,19 +17,31 @@ import {
   SIGNOUT_USER,
   SIGNOUT_USER_SUCCESS,
   SIGNUP_USER,
-  SIGNUP_USER_SUCCESS
+  SIGNUP_USER_SUCCESS,
+  ADD_CARD,
+  ADD_CARD_SUCCESS,
+  SYNC_USER
 } from 'constants/ActionTypes';
 
-export const userSignUp = (user) => {
+
+export const userSignUp = (card) => {
   return {
     type: SIGNUP_USER,
+    payload: card
+  };
+};
+export const addCard = (user) => {
+  return {
+    type: ADD_CARD,
     payload: user
   };
 };
-export const userSignIn = (user) => {
+export const userSignIn = (user, userData, cardData) => {
   return {
     type: SIGNIN_USER,
-    payload: user
+    payload: user,
+    userData : userData,
+    cardData : cardData
   };
 };
 export const userSignOut = () => {
@@ -37,19 +49,31 @@ export const userSignOut = () => {
     type: SIGNOUT_USER
   };
 };
-export const userSignUpSuccess = (authUser) => {
+export const userSignUpSuccess = (authUser, userData, cardData) => {
   return {
     type: SIGNUP_USER_SUCCESS,
-    payload: authUser
+    payload: authUser,
+    userData : userData,
+    cardData : cardData
   };
 };
 
-export const userSignInSuccess = (authUser) => {
+export const userSignInSuccess = (authUser, userData, cardData) => {
   return {
     type: SIGNIN_USER_SUCCESS,
+    payload: authUser,
+    userData : userData,
+    cardData : cardData
+  }
+};
+
+export const addCardSuccess = (authUser) => {
+  return {
+    type: ADD_CARD_SUCCESS,
     payload: authUser
   }
 };
+
 export const userSignOutSuccess = () => {
   return {
     type: SIGNOUT_USER_SUCCESS,
@@ -130,3 +154,8 @@ export const hideAuthLoader = () => {
     type: ON_HIDE_LOADER,
   };
 };
+
+export const syncUser = user => ({
+  type: SYNC_USER,
+  user
+});

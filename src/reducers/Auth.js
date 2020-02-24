@@ -10,8 +10,11 @@ import {
   SIGNIN_TWITTER_USER_SUCCESS,
   SIGNIN_USER_SUCCESS,
   SIGNOUT_USER_SUCCESS,
-  SIGNUP_USER_SUCCESS
+  SIGNUP_USER_SUCCESS,
+  ADD_CARD_SUCCESS,
+  SYNC_USER
 } from "constants/ActionTypes";
+
 
 const INIT_STATE = {
   loader: false,
@@ -19,7 +22,11 @@ const INIT_STATE = {
   showMessage: false,
   initURL: '',
   authUser: localStorage.getItem('user_id'),
+  userData : '',
+  cardData : ''
 };
+
+
 
 
 export default (state = INIT_STATE, action) => {
@@ -28,14 +35,18 @@ export default (state = INIT_STATE, action) => {
       return {
         ...state,
         loader: false,
-        authUser: action.payload
+        authUser: action.payload,
+        userData : action.userData,
+        cardData : action.cardData
       }
     }
     case SIGNIN_USER_SUCCESS: {
       return {
         ...state,
         loader: false,
-        authUser: action.payload
+        authUser: action.payload,
+        userData : action.userData,
+        cardData : action.cardData
       }
     }
     case INIT_URL: {
@@ -49,6 +60,15 @@ export default (state = INIT_STATE, action) => {
         ...state,
         authUser: null,
         initURL: '/app/dashboard/crypto',
+        loader: false
+      }
+    }
+
+    case ADD_CARD_SUCCESS : {
+      return {
+        ...state,
+        alertMessage: action.payload,
+        showMessage: true,
         loader: false
       }
     }
@@ -110,6 +130,12 @@ export default (state = INIT_STATE, action) => {
         loader: false
       }
     }
+    case SYNC_USER:
+      return {
+        ...state,
+        loggedIn: action.user != null,
+        user: action.user
+      }
     default:
       return state;
   }

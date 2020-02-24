@@ -59,6 +59,8 @@ export const SIGNIN_USER_SUCCESS = 'signin_user_success';
 export const SIGNOUT_USER = 'signout_user';
 export const SIGNOUT_USER_SUCCESS = 'signout_user_success';
 export const INIT_URL = 'init_url';
+export const ADD_CARD = 'add_card';
+export const ADD_CARD_SUCCESS = 'add_card_success';
 
 // Chat Module const
 
@@ -74,7 +76,7 @@ export const USER_INFO_STATE = 'user_info_state';
 export const SUBMIT_COMMENT = 'submit_comment';
 export const UPDATE_MESSAGE_VALUE = 'update_message_value';
 export const UPDATE_SEARCH_CHAT_USER = 'update_search_chat_user';
-
+export const SYNC_USER = 'SYNC_USER'
 //// Mail Module const
 
 

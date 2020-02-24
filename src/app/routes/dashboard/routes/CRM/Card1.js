@@ -1,41 +1,25 @@
 import React from "react";
 import 'react-credit-cards/es/styles-compiled.css';
 import Cards from 'react-credit-cards';
+import { connect } from 'react-redux'
 
+const Card1 = (props) => {
 
-export default class Card1 extends React.Component {
-
-  
-  state = {
-    cvc: '472',
-    expiry: '',
-    focus: '',
-    name: 'Robert Johnson',
-    number: '51',
-  };
-
-  handleInputFocus = (e) => {
-    this.setState({ focus: e.target.name });
-  }
-  
-  handleInputChange = (e) => {
-    const { name, value } = e.target;
-    
-    this.setState({ [name]: value });
-  }
-  
-render () {
   return (
     <Cards
-    cvc={this.state.cvc}
-    expiry={this.state.expiry}
-    focused={this.state.focus}
-    name={this.state.name}
-    number={this.state.number}
+    cvc={props.cardData.cvc}
+    expiry={props.cardData.expiry}
+    focused={true}
+    name={props.cardData.name}
+    number={props.cardData.number}
   />
 
   )
 }
 
 
-}
+const mapStateToProps = ({ auth }) => {
+  const { cardData } = auth;
+  return { cardData }
+};
+export default connect(mapStateToProps)(Card1);

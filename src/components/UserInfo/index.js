@@ -10,7 +10,7 @@ class UserInfo extends React.Component {
   state = {
     anchorEl: null,
     open: false,
-    name: this.props.authUser.name
+    name: this.props.userData.name 
   };
 
   handleClick = event => {
@@ -72,7 +72,7 @@ class UserInfo extends React.Component {
 
 const mapStateToProps = ({ settings, auth }) => {
   const { locale } = settings;
-  const { authUser, initURL } = auth;
-  return { authUser, initURL, locale }
+  const { authUser, initURL, userData } = auth;
+  return { authUser, initURL, locale, userData }
 };
 export default connect(mapStateToProps, { userSignOut })(UserInfo);
